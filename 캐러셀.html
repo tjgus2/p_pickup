@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>3개가 보이는 3D 캐러셀</title>
+  <style>
+    body {
+      background-color: #000;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .carousel-container {
+      width: 100%;
+      height: 400px;
+      perspective: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .carousel {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease;
+    }
+
+    .carousel-item {
+      position: absolute;
+      width: 220px;
+      height: 140px;
+      left: 40px;
+      top: 80px;
+      background-color: #1e1e1e;
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      transform-style: preserve-3d;
+      opacity: 0;
+      text-align: center;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .carousel-item.visible {
+      opacity: 1;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .carousel-item h4 {
+      margin: 8px 0 4px;
+      font-size: 16px;
+    }
+
+    .carousel-item p {
+      margin: 0;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<div class="carousel-container">
+  <div class="carousel" id="carousel">
+    <div class="carousel-item">
+      <img src="https://placehold.co/300x100/ff6/fff?text=1" alt="img1">
+      <h4>Brazil</h4>
+      <p>브라질의 열정적인 팝업 전시</p>
+    </div>
+    <div class="carousel-item">
+      <img src="https://placehold.co/300x100/f93/fff?text=2" alt="img2">
+      <h4>Japan</h4>
+      <p>일본의 감성 가득 팝업</p>
+    </div>
+    <div class="carousel-item">
+      <img src="https://placehold.co/300x100/39f/fff?text=3" alt="img3">
+      <h4>Korea</h4>
+      <p>한국의 현대미술 팝업</p>
+    </div>
+    <div class="carousel-item">
+      <img src="https://placehold.co/300x100/3f9/fff?text=4" alt="img4">
+      <h4>France</h4>
+      <p>프랑스 감성의 디자인 팝업</p>
+    </div>
+    <div class="carousel-item">
+      <img src="https://placehold.co/300x100/f39/fff?text=5" alt="img5">
+      <h4>USA</h4>
+      <p>미국 스트리트 스타일 팝업</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const carousel = document.getElementById("carousel");
+  const items = carousel.querySelectorAll(".carousel-item");
+  const itemCount = items.length;
+  const anglePerItem = 360 / itemCount;
+  let currentRotation = 0;
+
+  function updateItems() {
+    items.forEach((item, i) => {
+      const angle = i * anglePerItem + currentRotation;
+      item.style.transform = `rotateY(${angle}deg) translateZ(500px)`;
+
+      // 상대 각도 계산
+      const relativeAngle = (angle % 360 + 360) % 360;
+
+      // 중심(0도)을 기준으로 ±90도 범위 (총 3개 정도 보이게)
+      const isVisible = relativeAngle < 90 || relativeAngle > 270;
+
+      item.classList.toggle("visible", isVisible);
+    });
+  }
+
+  function autoRotate() {
+    currentRotation -= anglePerItem;
+    carousel.style.transform = `rotateY(${currentRotation}deg)`;
+    updateItems();
+  }
+
+  updateItems();
+  setInterval(autoRotate, 3000);
+</script>
+
+</body>
+</html>
